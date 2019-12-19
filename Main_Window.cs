@@ -1,17 +1,10 @@
-﻿using Microsoft.Build.Utilities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WBNET_Updater
@@ -35,8 +28,8 @@ namespace WBNET_Updater
 			bool shouldUpdate = Update_CheckBox.Checked,
 				shouldBackup = Backup_CheckBox.Checked,
 				run = true,
-				backupComplete = false,
-				updateComplete = false;
+				backupComplete,
+				updateComplete;
 
 			string wbNetPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Install-Dir"),
 				backUpPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir") + Path.DirectorySeparatorChar + dateTime,
@@ -52,7 +45,7 @@ namespace WBNET_Updater
 			if (!Directory.Exists(backUpPath) && shouldBackup && run)
 			{
 				Directory.CreateDirectory(backUpPath);
-			} 
+			}
 			else
 			{
 				MessageBox.Show("You can only create 1 backup every minute!", "WB.Net Updater Backup Already created", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -63,7 +56,7 @@ namespace WBNET_Updater
 			{
 				MessageBox.Show("You have not selected any actions to take place.", "WB.Net Updater No Actions Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
-			else if(run)
+			else if (run)
 			{
 				WriteToLog("-- WBNET Updater --");
 				WriteToLog("Start Time: " + dateTime);
@@ -75,7 +68,7 @@ namespace WBNET_Updater
 					backupComplete = BackupFilesWithProgress(wbNetPath, backUpPath, ConfigurationManager.AppSettings.Get("Backup-Ignore-Dir") + " " + ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir"), ConfigurationManager.AppSettings.Get("Backup-Ignore-File"));
 					message += "Backup Complete: " + backupComplete + "\n";
 					message += "Backups Deleted: " + DeleteExpiredBackups() + "\n";
-					
+
 				}
 
 				if (shouldUpdate)
@@ -89,8 +82,6 @@ namespace WBNET_Updater
 				MessageBox.Show(message, "WB.Net Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 
-
-			message = "";
 			Start_Update.Enabled = true;
 		}
 
@@ -104,12 +95,12 @@ namespace WBNET_Updater
 			WriteToLog(" ");
 			WriteToLog("Deleting excess backups...");
 
-			if (backupsToKeep < 3) 
+			if (backupsToKeep < 3)
 			{
 				backupsToKeep = 3;
 			}
 
-			foreach(DirectoryInfo backupSubDir in  backupDir.GetDirectories().OrderByDescending(di => di.Name).Skip(backupsToKeep))
+			foreach (DirectoryInfo backupSubDir in backupDir.GetDirectories().OrderByDescending(di => di.Name).Skip(backupsToKeep))
 			{
 				numberDeleted++;
 				WriteToLog("[" + numberDeleted + "] Deleting: " + backupSubDir.FullName);
@@ -162,8 +153,8 @@ namespace WBNET_Updater
 
 			Save_As_Default.Enabled = diff;
 			saveCurrentSettingsAsDefaultToolStripMenuItem.Enabled = diff;
-			
-			if(diff)
+
+			if (diff)
 			{
 				toolTip1.SetToolTip(Start_Update, "Save Backup & Update preferences to config");
 			}
@@ -171,7 +162,7 @@ namespace WBNET_Updater
 			{
 				toolTip1.SetToolTip(Start_Update, "Backup & Update preferences are the same as the config");
 			}
-			
+
 
 			if (wbNetPath.Length == 0 || backUpPath.Length == 0 || sourcePath.Length == 0)
 			{
@@ -355,26 +346,32 @@ namespace WBNET_Updater
 
 		private void saveCurrentSettingsAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SaveAsDefault(); 
+			SaveAsDefault();
 			UpdateLockedButtons();
 		}
 
 		private void deleteAfterToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Form deleteAfter = new Backup_Delete_After();
-			deleteAfter.ShowDialog();
+			using (Form deleteAfter = new Backup_Delete_After())
+				deleteAfter.ShowDialog();
 		}
 
 		private void ignoredDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Form exclusionEditor = new Backup_Exclusion_Editor(true);
-			exclusionEditor.ShowDialog();
+			using (Form exclusionEditor = new Backup_Exclusion_Editor(true))
+				exclusionEditor.ShowDialog();
 		}
 
 		private void ignoredFilesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Form exclusionEditor = new Backup_Exclusion_Editor(false);
-			exclusionEditor.ShowDialog();
+			using (Form exclusionEditor = new Backup_Exclusion_Editor(false))
+				exclusionEditor.ShowDialog();
+		}
+
+		private void pathsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			using (Form pathUpdateDialog = new Path_Update_Dialog())
+				pathUpdateDialog.ShowDialog();
 		}
 	}
 }

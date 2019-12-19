@@ -66,7 +66,8 @@ namespace WBNET_Updater
 			if (names.Length > 0)
 				type = m_asmb.GetType(m_ns + "." + names[0]);
 
-			for (int i = 1; i < names.Length; ++i) {
+			for (int i = 1; i < names.Length; ++i)
+			{
 				type = type.GetNestedType(names[i], BindingFlags.NonPublic);
 			}
 			return type;
@@ -83,10 +84,13 @@ namespace WBNET_Updater
 			Type type = GetType(name);
 
 			ConstructorInfo[] ctorInfos = type.GetConstructors();
-			foreach (ConstructorInfo ci in ctorInfos) {
-				try {
+			foreach (ConstructorInfo ci in ctorInfos)
+			{
+				try
+				{
 					return ci.Invoke(parameters);
-				} catch { }
+				}
+				catch { }
 			}
 
 			return null;
@@ -137,7 +141,8 @@ namespace WBNET_Updater
 		/// <param name="func">The function to execute</param>
 		/// <param name="parameters">The parameters to pass to function 'func'</param>
 		/// <returns>The result of the function invocation</returns>
-		public object CallAs2(Type type, object obj, string func, object[] parameters) {
+		public object CallAs2(Type type, object obj, string func, object[] parameters)
+		{
 			MethodInfo methInfo = type.GetMethod(func, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			return methInfo.Invoke(obj, parameters);
 		}
@@ -160,7 +165,8 @@ namespace WBNET_Updater
 		/// <param name="obj">The object containing 'prop'</param>
 		/// <param name="prop">The property name</param>
 		/// <returns>The property value</returns>
-		public object GetAs(Type type, object obj, string prop) {
+		public object GetAs(Type type, object obj, string prop)
+		{
 			PropertyInfo propInfo = type.GetProperty(prop, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			return propInfo.GetValue(obj, null);
 		}
@@ -171,7 +177,8 @@ namespace WBNET_Updater
 		/// <param name="typeName">The name of enum type</param>
 		/// <param name="name">The name of the value</param>
 		/// <returns>The enum value</returns>
-		public object GetEnum(string typeName, string name) {
+		public object GetEnum(string typeName, string name)
+		{
 			Type type = GetType(typeName);
 			FieldInfo fieldInfo = type.GetField(name);
 			return fieldInfo.GetValue(null);

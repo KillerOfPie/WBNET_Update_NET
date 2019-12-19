@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WBNET_Updater
@@ -19,14 +12,14 @@ namespace WBNET_Updater
 		{
 			InitializeComponent();
 			this.listDir = listDir;
-			if(listDir)
+			if (listDir)
 			{
 				string list = ConfigurationManager.AppSettings.Get("Backup-Ignore-Dir");
-				foreach (string s in list.Split(' ')) 
+				foreach (string s in list.Split(' '))
 				{
 					Exclusion_List.Items.Add(s.Trim('"'), true);
 				}
-			} 
+			}
 			else
 			{
 				string list = ConfigurationManager.AppSettings.Get("Backup-Ignore-File");
@@ -84,7 +77,7 @@ namespace WBNET_Updater
 
 		private void Text_To_Add_Enter(object sender, KeyEventArgs e)
 		{
-			if(e.KeyCode == Keys.Enter)
+			if (e.KeyCode == Keys.Enter)
 			{
 				Add_Text_To_List();
 			}

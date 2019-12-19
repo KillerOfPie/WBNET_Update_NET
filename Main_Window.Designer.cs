@@ -44,6 +44,7 @@
 			this.ignoredDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pathsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveCurrentSettingsAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -142,7 +143,8 @@
 			// configureToolStripMenuItem
 			// 
 			this.configureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.backupToolStripMenuItem});
+            this.backupToolStripMenuItem,
+            this.pathsToolStripMenuItem});
 			this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
 			this.configureToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
 			this.configureToolStripMenuItem.Text = "Configure";
@@ -160,23 +162,30 @@
 			// ignoredDirectoriesToolStripMenuItem
 			// 
 			this.ignoredDirectoriesToolStripMenuItem.Name = "ignoredDirectoriesToolStripMenuItem";
-			this.ignoredDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.ignoredDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
 			this.ignoredDirectoriesToolStripMenuItem.Text = "Ignored Directories";
 			this.ignoredDirectoriesToolStripMenuItem.Click += new System.EventHandler(this.ignoredDirectoriesToolStripMenuItem_Click);
 			// 
 			// ignoredFilesToolStripMenuItem
 			// 
 			this.ignoredFilesToolStripMenuItem.Name = "ignoredFilesToolStripMenuItem";
-			this.ignoredFilesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.ignoredFilesToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
 			this.ignoredFilesToolStripMenuItem.Text = "Ignored Files";
 			this.ignoredFilesToolStripMenuItem.Click += new System.EventHandler(this.ignoredFilesToolStripMenuItem_Click);
 			// 
 			// deleteAfterToolStripMenuItem
 			// 
 			this.deleteAfterToolStripMenuItem.Name = "deleteAfterToolStripMenuItem";
-			this.deleteAfterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.deleteAfterToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
 			this.deleteAfterToolStripMenuItem.Text = "Delete After";
 			this.deleteAfterToolStripMenuItem.Click += new System.EventHandler(this.deleteAfterToolStripMenuItem_Click);
+			// 
+			// pathsToolStripMenuItem
+			// 
+			this.pathsToolStripMenuItem.Name = "pathsToolStripMenuItem";
+			this.pathsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.pathsToolStripMenuItem.Text = "Paths";
+			this.pathsToolStripMenuItem.Click += new System.EventHandler(this.pathsToolStripMenuItem_Click);
 			// 
 			// saveCurrentSettingsAsDefaultToolStripMenuItem
 			// 
@@ -227,6 +236,7 @@
 		private System.Windows.Forms.ToolStripMenuItem ignoredFilesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveCurrentSettingsAsDefaultToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteAfterToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem pathsToolStripMenuItem;
 	}
 }
 

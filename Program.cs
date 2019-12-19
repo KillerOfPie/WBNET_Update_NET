@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Configuration;
 using System.IO;
+using System.Windows.Forms;
 
 namespace WBNET_Updater
 {
@@ -21,6 +18,32 @@ namespace WBNET_Updater
 				sourcePath = ConfigurationManager.AppSettings.Get("WinBill-Net-Source-Dir");
 			FolderSelectDialog folderBrowser = new FolderSelectDialog();
 
+			if (wbNetPath.StartsWith("\\"))
+			{
+				wbNetPath = Application.StartupPath + wbNetPath;
+			}
+			else if (wbNetPath == ".")
+			{
+				wbNetPath = Application.StartupPath;
+			}
+
+			if (backUpPath.StartsWith("\\"))
+			{
+				backUpPath = Application.StartupPath + wbNetPath;
+			}
+			else if (backUpPath == ".")
+			{
+				backUpPath = Application.StartupPath;
+			}
+
+			if (sourcePath.StartsWith("\\"))
+			{
+				sourcePath = Application.StartupPath + wbNetPath;
+			}
+			else if (sourcePath == ".")
+			{
+				wbNetPath = Application.StartupPath;
+			}
 
 			if (!Directory.Exists(wbNetPath))
 			{
@@ -28,7 +51,11 @@ namespace WBNET_Updater
 				folderBrowser.InitialDirectory = Application.StartupPath;
 				if (folderBrowser.ShowDialog())
 				{
-					if(folderBrowser.FileName.Contains(Application.StartupPath))
+					if (folderBrowser.FileName == Application.StartupPath)
+					{
+						wbNetPath = folderBrowser.FileName.Replace(Application.StartupPath, ".");
+					}
+					else if (folderBrowser.FileName.Contains(Application.StartupPath))
 					{
 						wbNetPath = folderBrowser.FileName.Replace(Application.StartupPath, "");
 					}
@@ -46,7 +73,11 @@ namespace WBNET_Updater
 				folderBrowser.InitialDirectory = wbNetPath;
 				if (folderBrowser.ShowDialog())
 				{
-					if (folderBrowser.FileName.Contains(Application.StartupPath))
+					if (folderBrowser.FileName == Application.StartupPath)
+					{
+						backUpPath = folderBrowser.FileName.Replace(Application.StartupPath, ".");
+					}
+					else if (folderBrowser.FileName.Contains(Application.StartupPath))
 					{
 						backUpPath = folderBrowser.FileName.Replace(Application.StartupPath, "");
 					}
@@ -63,7 +94,11 @@ namespace WBNET_Updater
 				folderBrowser.InitialDirectory = wbNetPath;
 				if (folderBrowser.ShowDialog())
 				{
-					if (folderBrowser.FileName.Contains(Application.StartupPath))
+					if (folderBrowser.FileName == Application.StartupPath)
+					{
+						sourcePath = folderBrowser.FileName.Replace(Application.StartupPath, ".");
+					}
+					else if (folderBrowser.FileName.Contains(Application.StartupPath))
 					{
 						sourcePath = folderBrowser.FileName.Replace(Application.StartupPath, "");
 					}
