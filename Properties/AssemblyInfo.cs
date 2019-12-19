@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WBNET Updater")]
 [assembly: AssemblyDescription("Updates WinBill .net to a newer version.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Lying Pie Studios")]
 [assembly: AssemblyProduct("WBNET Updater")]
-[assembly: AssemblyCopyright("Copyright KillerOfPie ©  2019")]
+[assembly: AssemblyCopyright("Copyright Lying Pie Studios ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

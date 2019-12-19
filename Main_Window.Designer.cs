@@ -90,7 +90,7 @@
 			this.Save_As_Default.Size = new System.Drawing.Size(95, 23);
 			this.Save_As_Default.TabIndex = 4;
 			this.Save_As_Default.Text = "Save as Default";
-			this.toolTip1.SetToolTip(this.Save_As_Default, "Save Backup/Upodate preferences to config");
+			this.toolTip1.SetToolTip(this.Save_As_Default, "Save Backup & Update preferences to config");
 			this.Save_As_Default.UseVisualStyleBackColor = true;
 			this.Save_As_Default.Click += new System.EventHandler(this.Save_As_Default_Click);
 			// 
@@ -112,11 +112,13 @@
 			this.Update_CheckBox.Size = new System.Drawing.Size(153, 17);
 			this.Update_CheckBox.TabIndex = 3;
 			this.Update_CheckBox.Text = "Update to newest version?";
+			this.toolTip1.SetToolTip(this.Update_CheckBox, "Update the current directory");
 			this.Update_CheckBox.UseVisualStyleBackColor = true;
 			this.Update_CheckBox.CheckedChanged += new System.EventHandler(this.Update_CheckBox_CheckedChanged);
 			// 
 			// toolStrip1
 			// 
+			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.File_Drop_Down});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);

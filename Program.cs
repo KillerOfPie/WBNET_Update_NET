@@ -25,10 +25,18 @@ namespace WBNET_Updater
 			if (!Directory.Exists(wbNetPath))
 			{
 				folderBrowser.Title = "Select WinBill.Net Install Directory";
-				folderBrowser.InitialDirectory = @"c:\";
+				folderBrowser.InitialDirectory = Application.StartupPath;
 				if (folderBrowser.ShowDialog())
 				{
-					wbNetPath = folderBrowser.FileName;
+					if(folderBrowser.FileName.Contains(Application.StartupPath))
+					{
+						wbNetPath = folderBrowser.FileName.Replace(Application.StartupPath, "");
+					}
+					else
+					{
+						wbNetPath = folderBrowser.FileName;
+					}
+
 				}
 			}
 
@@ -38,7 +46,14 @@ namespace WBNET_Updater
 				folderBrowser.InitialDirectory = wbNetPath;
 				if (folderBrowser.ShowDialog())
 				{
-					backUpPath = folderBrowser.FileName;
+					if (folderBrowser.FileName.Contains(Application.StartupPath))
+					{
+						backUpPath = folderBrowser.FileName.Replace(Application.StartupPath, "");
+					}
+					else
+					{
+						backUpPath = folderBrowser.FileName;
+					}
 				}
 			}
 
@@ -48,7 +63,14 @@ namespace WBNET_Updater
 				folderBrowser.InitialDirectory = wbNetPath;
 				if (folderBrowser.ShowDialog())
 				{
-					sourcePath = folderBrowser.FileName;
+					if (folderBrowser.FileName.Contains(Application.StartupPath))
+					{
+						sourcePath = folderBrowser.FileName.Replace(Application.StartupPath, "");
+					}
+					else
+					{
+						sourcePath = folderBrowser.FileName;
+					}
 				}
 			}
 

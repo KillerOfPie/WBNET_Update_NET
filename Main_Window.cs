@@ -156,8 +156,33 @@ namespace WBNET_Updater
 		private void UpdateLockedButtons()
 		{
 			bool diff = DifferentThanStored();
+			string wbNetPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Install-Dir"),
+				backUpPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir"),
+				sourcePath = ConfigurationManager.AppSettings.Get("WinBill-Net-Source-Dir");
+
 			Save_As_Default.Enabled = diff;
 			saveCurrentSettingsAsDefaultToolStripMenuItem.Enabled = diff;
+			
+			if(diff)
+			{
+				toolTip1.SetToolTip(Start_Update, "Save Backup & Update preferences to config");
+			}
+			else
+			{
+				toolTip1.SetToolTip(Start_Update, "Backup & Update preferences are the same as the config");
+			}
+			
+
+			if (wbNetPath.Length == 0 || backUpPath.Length == 0 || sourcePath.Length == 0)
+			{
+				Start_Update.Enabled = false;
+				toolTip1.SetToolTip(Start_Update, "All paths must be set before updating or backing up.");
+			}
+			else
+			{
+				Start_Update.Enabled = true;
+				toolTip1.SetToolTip(Start_Update, "Start selected operations.");
+			}
 		}
 
 		public bool BackupFilesWithProgress(string source, string destination, string excludedDir, string excludedFile)
@@ -289,7 +314,7 @@ namespace WBNET_Updater
 				string line = proc.StandardOutput.ReadLine();
 				WriteToLog(line);
 				items++;
-				if (line.Contains("New Dir") || line.Contains("New File"))
+				if (line.Contains("New Dir") || line.Contains("New File") || line.Contains("Newer"))
 				{
 					line = Regex.Replace(line, "[A-Za-z \t]", "");
 					size += long.Parse(line.Split(':')[0]);
