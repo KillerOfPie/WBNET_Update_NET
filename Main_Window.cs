@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Build.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,6 +18,8 @@ namespace WBNET_Updater
 {
 	public partial class MainScreen : Form
 	{
+		String dateTime = "";
+
 		public MainScreen()
 		{
 			InitializeComponent();
@@ -27,32 +31,97 @@ namespace WBNET_Updater
 		private void Update_Click(object sender, EventArgs e)
 		{
 			Start_Update.Enabled = false;
-			Boolean shouldUpdate = Boolean.Parse(ConfigurationManager.AppSettings.Get("Default-Update-Enabled")),
-				shouldBackup = Boolean.Parse(ConfigurationManager.AppSettings.Get("Default-Backup-Enabled"));
+			dateTime = DateTime.Now.ToString("MMddyyyyTHHmm");
+			bool shouldUpdate = Update_CheckBox.Checked,
+				shouldBackup = Backup_CheckBox.Checked,
+				run = true,
+				backupComplete = false,
+				updateComplete = false;
 
 			string wbNetPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Install-Dir"),
-				backUpPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir"),
-				sourcePath = ConfigurationManager.AppSettings.Get("WinBill-Net-Source-Dir");
+				backUpPath = ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir") + Path.DirectorySeparatorChar + dateTime,
+				sourcePath = ConfigurationManager.AppSettings.Get("WinBill-Net-Source-Dir"),
+				message = "";
 
-			if (!(Directory.Exists(wbNetPath) || Directory.Exists(backUpPath) || Directory.Exists(sourcePath)))
+			if (!(Directory.Exists(wbNetPath) || Directory.Exists(sourcePath)))
 			{
 				MessageBox.Show("One or multiple paths invalid, please restart the program and select valid paths!", "WB.Net Updater Error 5", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Environment.Exit(5);
+				run = false;
 			}
 
-			if(!(shouldBackup || shouldUpdate))
+			if (!Directory.Exists(backUpPath) && shouldBackup && run)
 			{
-				MessageBox.Show("You have not selected any actions to take place.", "WB.Net Updater No Actions Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				Directory.CreateDirectory(backUpPath);
 			} 
 			else
 			{
-				if (shouldBackup)
-				{
-					BackupFilesWithProgress(wbNetPath, backUpPath, ConfigurationManager.AppSettings.Get("Backup-Ignore-Dir"), ConfigurationManager.AppSettings.Get("Backup-Ignore-File"));
-				}
+				MessageBox.Show("You can only create 1 backup every minute!", "WB.Net Updater Backup Already created", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				run = false;
 			}
 
+			if (!(shouldBackup || shouldUpdate))
+			{
+				MessageBox.Show("You have not selected any actions to take place.", "WB.Net Updater No Actions Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			else if(run)
+			{
+				WriteToLog("-- WBNET Updater --");
+				WriteToLog("Start Time: " + dateTime);
+				WriteToLog("Backup Dir: " + backUpPath);
+				WriteToLog("WinBill Dir: " + wbNetPath);
+				WriteToLog("Source Dir: " + sourcePath);
+				if (shouldBackup)
+				{
+					backupComplete = BackupFilesWithProgress(wbNetPath, backUpPath, ConfigurationManager.AppSettings.Get("Backup-Ignore-Dir") + " " + ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir"), ConfigurationManager.AppSettings.Get("Backup-Ignore-File"));
+					message += "Backup Complete: " + backupComplete + "\n";
+					message += "Backups Deleted: " + DeleteExpiredBackups() + "\n";
+					
+				}
+
+				if (shouldUpdate)
+				{
+					updateComplete = UpdateFilesWithProgress(sourcePath, wbNetPath);
+					message += "Update Complete: " + updateComplete;
+				}
+
+				WriteToLog("End Time: " + DateTime.Now.ToString("MMddyyyyTHHmm"));
+
+				MessageBox.Show(message, "WB.Net Updater", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+
+
+			message = "";
 			Start_Update.Enabled = true;
+		}
+
+		private int DeleteExpiredBackups()
+		{
+			DirectoryInfo backupDir = new DirectoryInfo(ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir"));
+			int backupsToKeep = int.Parse(ConfigurationManager.AppSettings.Get("Backups-To-Keep")), numberDeleted = 0;
+
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog("Deleting excess backups...");
+
+			if (backupsToKeep < 3) 
+			{
+				backupsToKeep = 3;
+			}
+
+			foreach(DirectoryInfo backupSubDir in  backupDir.GetDirectories().OrderByDescending(di => di.Name).Skip(backupsToKeep))
+			{
+				numberDeleted++;
+				WriteToLog("[" + numberDeleted + "] Deleting: " + backupSubDir.FullName);
+				backupSubDir.Delete(true);
+			}
+
+			WriteToLog("Finished deleting " + numberDeleted + " old backups.");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+
+			return numberDeleted;
 		}
 
 		private void Save_As_Default_Click(object sender, EventArgs e)
@@ -91,15 +160,122 @@ namespace WBNET_Updater
 			saveCurrentSettingsAsDefaultToolStripMenuItem.Enabled = diff;
 		}
 
-		public void BackupFilesWithProgress(string source, string destination, string excludedDir, string excludedFile)
+		public bool BackupFilesWithProgress(string source, string destination, string excludedDir, string excludedFile)
 		{
-			long sourceSize = DirSize(new DirectoryInfo(source));
+			long sourceSize = DirSize(source, destination, excludedDir, excludedFile);
 			var proc = new Process
 			{
 				StartInfo = new ProcessStartInfo
 				{
-					FileName = "robocopy.exe",
-					Arguments = String.Format("'{0}' '{1}' *.* /E /XD '{2}' /XF '{3}'", source, destination, excludedDir, excludedFile),
+					FileName = "Robocopy.exe",
+					Arguments = String.Format("{0} {1} *.* /E /XD {2} /XF {3} /BYTES /FP", source, destination, excludedDir, excludedFile),
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					CreateNoWindow = true
+
+				}
+			};
+
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog("Backing up current files...");
+			proc.Start();
+			long size = 0;
+			while (!proc.StandardOutput.EndOfStream)
+			{
+				string line = proc.StandardOutput.ReadLine();
+				WriteToLog(line);
+				if (line.Contains("New Dir") || line.Contains("New File"))
+				{
+					line = Regex.Replace(line, "[A-Za-z \t]", "");
+					size += long.Parse(line.Split(':')[0]);
+				}
+				Update_BackupProgress(((int)size) + 1, ((int)sourceSize) + 1);
+			}
+			proc.Close();
+
+			WriteToLog("Finished backing up " + size + " Bytes of files.");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+
+			if (sourceSize == size)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public bool UpdateFilesWithProgress(string source, string destination)
+		{
+			long sourceSize = DirSize(source, destination, "", "");
+			var proc = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = "Robocopy.exe",
+					Arguments = String.Format("{0} {1} *.* /E /BYTES /FP", source, destination),
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					CreateNoWindow = true
+
+				}
+			};
+
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog("Updating current files...");
+			proc.Start();
+			long size = 0;
+			while (!proc.StandardOutput.EndOfStream)
+			{
+				string line = proc.StandardOutput.ReadLine();
+				WriteToLog(line);
+				if (line.Contains("New Dir") || line.Contains("New File") || line.Contains("Newer"))
+				{
+					line = Regex.Replace(line, "[A-Za-z \t]", "");
+					size += long.Parse(line.Split(':')[0]);
+				}
+				Update_UpdateProgress(((int)size) + 1, ((int)sourceSize) + 1);
+			}
+			proc.Close();
+
+			WriteToLog("Finished updating up " + size + " Bytes of files.");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+
+			if (sourceSize == size)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public long DirSize(string source, string destination, string excludedDir, string excludedFile)
+		{
+			long size = 0;
+			long items = 0;
+
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog("Detecting directory size...");
+
+			var proc = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = "Robocopy.exe",
+					Arguments = String.Format("{0} {1} *.* /E /XD {2} /XF {3} /BYTES /L /FP", source, destination, excludedDir, excludedFile),
 					UseShellExecute = false,
 					RedirectStandardOutput = true,
 					CreateNoWindow = true
@@ -111,35 +287,33 @@ namespace WBNET_Updater
 			while (!proc.StandardOutput.EndOfStream)
 			{
 				string line = proc.StandardOutput.ReadLine();
-				using (StreamWriter w = File.AppendText(ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir") + "\\log.log"))
+				WriteToLog(line);
+				items++;
+				if (line.Contains("New Dir") || line.Contains("New File"))
 				{
-					w.WriteLine(line);
+					line = Regex.Replace(line, "[A-Za-z \t]", "");
+					size += long.Parse(line.Split(':')[0]);
 				}
 
-				Update_BackupProgress(1, int.Parse(sourceSize.ToString()));
 			}
+			proc.Close();
+
+			WriteToLog("...Finished detecting directory size.");
+			WriteToLog(" ");
+			WriteToLog(" ");
+			WriteToLog(" ");
+
+			return size;
 		}
 
-		public static long DirSize(DirectoryInfo d)
+		private void WriteToLog(string message)
 		{
-			long size = 0;
-			long items = 0;
-			// Add file sizes.
-			FileInfo[] fis = d.GetFiles();
-			foreach (FileInfo fi in fis)
+			using (StreamWriter w = File.AppendText(ConfigurationManager.AppSettings.Get("WinBill-Net-Backup-Dir") + Path.DirectorySeparatorChar + dateTime + Path.DirectorySeparatorChar + "log.log"))
 			{
-				size += fi.Length;
-				items++;
+				w.WriteLine(message);
+				w.Flush();
+				w.Close();
 			}
-			// Add subdirectory sizes.
-			DirectoryInfo[] dis = d.GetDirectories();
-			foreach (DirectoryInfo di in dis)
-			{
-				size += DirSize(di);
-				items++;
-			}
-			//return size;
-			return items;
 		}
 
 		public void Update_BackupProgress(int copiedAmount, int totalAmount)
