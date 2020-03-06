@@ -97,8 +97,11 @@
 			// 
 			// Edit
 			// 
-			this.Edit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Edit.Location = new System.Drawing.Point(237, 153);
+			this.Edit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Edit.Location = new System.Drawing.Point(235, 153);
+			this.Edit.MaximumSize = new System.Drawing.Size(75, 23);
+			this.Edit.MinimumSize = new System.Drawing.Size(75, 23);
 			this.Edit.Name = "Edit";
 			this.Edit.Size = new System.Drawing.Size(75, 23);
 			this.Edit.TabIndex = 4;
@@ -108,8 +111,11 @@
 			// 
 			// Update_Paths
 			// 
-			this.Update_Paths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Update_Paths.Location = new System.Drawing.Point(318, 153);
+			this.Update_Paths.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Update_Paths.Location = new System.Drawing.Point(316, 153);
+			this.Update_Paths.MaximumSize = new System.Drawing.Size(75, 23);
+			this.Update_Paths.MinimumSize = new System.Drawing.Size(75, 23);
 			this.Update_Paths.Name = "Update_Paths";
 			this.Update_Paths.Size = new System.Drawing.Size(75, 23);
 			this.Update_Paths.TabIndex = 5;
@@ -119,8 +125,11 @@
 			// 
 			// Cancel
 			// 
-			this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Cancel.Location = new System.Drawing.Point(399, 153);
+			this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Cancel.Location = new System.Drawing.Point(397, 153);
+			this.Cancel.MaximumSize = new System.Drawing.Size(75, 23);
+			this.Cancel.MinimumSize = new System.Drawing.Size(75, 23);
 			this.Cancel.Name = "Cancel";
 			this.Cancel.Size = new System.Drawing.Size(75, 23);
 			this.Cancel.TabIndex = 6;
@@ -130,8 +139,11 @@
 			// 
 			// Close_Screen
 			// 
-			this.Close_Screen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Close_Screen.Location = new System.Drawing.Point(480, 153);
+			this.Close_Screen.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Close_Screen.Location = new System.Drawing.Point(478, 153);
+			this.Close_Screen.MaximumSize = new System.Drawing.Size(75, 23);
+			this.Close_Screen.MinimumSize = new System.Drawing.Size(75, 23);
 			this.Close_Screen.Name = "Close_Screen";
 			this.Close_Screen.Size = new System.Drawing.Size(75, 23);
 			this.Close_Screen.TabIndex = 7;
@@ -266,7 +278,6 @@
 		private System.Windows.Forms.TextBox WB_Net_Path;
 		private System.Windows.Forms.Button WB_Net_Path_Browse;
 		private System.Windows.Forms.GroupBox WB_Dir_Group;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button Edit;
 		private System.Windows.Forms.Button Update_Paths;
 		private System.Windows.Forms.Button Cancel;
@@ -279,5 +290,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Button Backup_Path_Browse;
 		private System.Windows.Forms.TextBox Backup_Path;
+		private System.Windows.Forms.Label label1;
 	}
 }

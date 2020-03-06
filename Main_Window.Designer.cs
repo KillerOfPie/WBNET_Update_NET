@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
 			this.Start_Update = new System.Windows.Forms.Button();
 			this.Backup_CheckBox = new System.Windows.Forms.CheckBox();
 			this.BackupProgression = new System.Windows.Forms.ProgressBar();
@@ -45,7 +44,10 @@
 			this.ignoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pathsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeAfterUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.launchAfterUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveCurrentSettingsAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.VersionDisplay = new System.Windows.Forms.ToolStripLabel();
 			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -121,7 +123,8 @@
 			// 
 			this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.File_Drop_Down});
+            this.File_Drop_Down,
+            this.VersionDisplay});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(314, 25);
@@ -134,7 +137,6 @@
 			this.File_Drop_Down.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configureToolStripMenuItem,
             this.saveCurrentSettingsAsDefaultToolStripMenuItem});
-			this.File_Drop_Down.Image = ((System.Drawing.Image)(resources.GetObject("File_Drop_Down.Image")));
 			this.File_Drop_Down.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.File_Drop_Down.Name = "File_Drop_Down";
 			this.File_Drop_Down.Size = new System.Drawing.Size(38, 22);
@@ -144,7 +146,9 @@
 			// 
 			this.configureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.backupToolStripMenuItem,
-            this.pathsToolStripMenuItem});
+            this.pathsToolStripMenuItem,
+            this.closeAfterUpdateToolStripMenuItem,
+            this.launchAfterUpdateToolStripMenuItem});
 			this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
 			this.configureToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
 			this.configureToolStripMenuItem.Text = "Configure";
@@ -156,7 +160,7 @@
             this.ignoredFilesToolStripMenuItem,
             this.deleteAfterToolStripMenuItem});
 			this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-			this.backupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.backupToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
 			this.backupToolStripMenuItem.Text = "Backup";
 			// 
 			// ignoredDirectoriesToolStripMenuItem
@@ -183,9 +187,23 @@
 			// pathsToolStripMenuItem
 			// 
 			this.pathsToolStripMenuItem.Name = "pathsToolStripMenuItem";
-			this.pathsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.pathsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
 			this.pathsToolStripMenuItem.Text = "Paths";
 			this.pathsToolStripMenuItem.Click += new System.EventHandler(this.pathsToolStripMenuItem_Click);
+			// 
+			// closeAfterUpdateToolStripMenuItem
+			// 
+			this.closeAfterUpdateToolStripMenuItem.Name = "closeAfterUpdateToolStripMenuItem";
+			this.closeAfterUpdateToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.closeAfterUpdateToolStripMenuItem.Text = "Close After Update";
+			this.closeAfterUpdateToolStripMenuItem.Click += new System.EventHandler(this.closeAfterUpdateToolStripMenuItem_Click);
+			// 
+			// launchAfterUpdateToolStripMenuItem
+			// 
+			this.launchAfterUpdateToolStripMenuItem.Name = "launchAfterUpdateToolStripMenuItem";
+			this.launchAfterUpdateToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+			this.launchAfterUpdateToolStripMenuItem.Text = "Launch After Update";
+			this.launchAfterUpdateToolStripMenuItem.Click += new System.EventHandler(this.launchAfterUpdateToolStripMenuItem_Click);
 			// 
 			// saveCurrentSettingsAsDefaultToolStripMenuItem
 			// 
@@ -193,6 +211,13 @@
 			this.saveCurrentSettingsAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
 			this.saveCurrentSettingsAsDefaultToolStripMenuItem.Text = "Save Current Settings as Default";
 			this.saveCurrentSettingsAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentSettingsAsDefaultToolStripMenuItem_Click);
+			// 
+			// VersionDisplay
+			// 
+			this.VersionDisplay.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.VersionDisplay.Name = "VersionDisplay";
+			this.VersionDisplay.Size = new System.Drawing.Size(83, 22);
+			this.VersionDisplay.Text = "VersionDisplay";
 			// 
 			// MainScreen
 			// 
@@ -207,6 +232,7 @@
 			this.Controls.Add(this.Backup_CheckBox);
 			this.Controls.Add(this.Start_Update);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = global::WBNET_Updater.Properties.Resources.logo;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "MainScreen";
@@ -237,6 +263,9 @@
 		private System.Windows.Forms.ToolStripMenuItem saveCurrentSettingsAsDefaultToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteAfterToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem pathsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem closeAfterUpdateToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem launchAfterUpdateToolStripMenuItem;
+		private System.Windows.Forms.ToolStripLabel VersionDisplay;
 	}
 }
 

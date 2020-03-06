@@ -14,18 +14,30 @@ namespace WBNET_Updater
 			this.listDir = listDir;
 			if (listDir)
 			{
+				this.Text = "Directory List for Backup to Ignore...";
+				List_Label.Text = "Directories " + List_Label.Text;
+
 				string list = ConfigurationManager.AppSettings.Get("Backup-Ignore-Dir");
-				foreach (string s in list.Split(' '))
+				foreach (string s in list.Split(new String[]{ "|" }, StringSplitOptions.RemoveEmptyEntries))
 				{
-					Exclusion_List.Items.Add(s.Trim('"'), true);
+					if (s != " ")
+					{
+						Exclusion_List.Items.Add(s.Trim(' '), true);
+					}
 				}
 			}
 			else
 			{
+				this.Text = "File List for Backup to Ignore...";
+				List_Label.Text = "Files " + List_Label.Text;
+
 				string list = ConfigurationManager.AppSettings.Get("Backup-Ignore-File");
-				foreach (string s in list.Split(' '))
+				foreach (string s in list.Split(new String[] { "|" }, StringSplitOptions.RemoveEmptyEntries))
 				{
-					Exclusion_List.Items.Add(s.Trim('"'), true);
+					if (s != " ")
+					{
+						Exclusion_List.Items.Add(s.Trim(' '), true);
+					}
 				}
 			}
 		}
@@ -37,13 +49,36 @@ namespace WBNET_Updater
 
 		private void Add_Text_To_List()
 		{
-			string to_Add = Text_To_Add.Text.Replace("\"", "").Replace(" ", "");
+			string to_Add = Text_To_Add.Text.Replace("|", "");
 			if (!Exclusion_List.Items.Contains(to_Add) && to_Add.Length > 0)
 			{
-				Exclusion_List.Items.Add(to_Add, true);
+				Exclusion_List.Items.Add(to_Add.Trim(' '), true);
 			}
 
 			Text_To_Add.Clear();
+		}
+
+		public void SetAppSetting(string key, string value)
+		{
+			try
+			{
+				var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				var settings = configFile.AppSettings.Settings;
+				if (settings[key] == null)
+				{
+					settings.Add(key, value);
+				}
+				else
+				{
+					settings[key].Value = value;
+				}
+				configFile.Save(ConfigurationSaveMode.Modified);
+				ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+			}
+			catch (ConfigurationErrorsException)
+			{
+				//Do Nothing
+			}
 		}
 
 		private void Accept_Click(object sender, EventArgs e)
@@ -51,22 +86,23 @@ namespace WBNET_Updater
 			if (listDir)
 			{
 				string to_set = "";
-				foreach (string s in Exclusion_List.Items)
+				foreach (string s in Exclusion_List.CheckedItems)
 				{
-					to_set = to_set + "\"" + s + "\" ";
+					to_set = to_set + "|" + s + "| ";
 				}
-				ConfigurationManager.AppSettings.Set("Backup-Ignore-Dir", to_set.TrimEnd(' '));
+				SetAppSetting("Backup-Ignore-Dir", to_set.TrimEnd(' '));
 			}
 			else
 			{
 				string to_set = "";
-				foreach (string s in Exclusion_List.Items)
+				foreach (string s in Exclusion_List.CheckedItems)
 				{
-					to_set = to_set + "\"" + s + "\" ";
+					to_set = to_set + "|" + s + "| ";
 				}
-				ConfigurationManager.AppSettings.Set("Backup-Ignore-File", to_set.TrimEnd(' '));
+				SetAppSetting("Backup-Ignore-File", to_set.TrimEnd(' '));
 			}
 
+			
 			this.Close();
 		}
 
@@ -88,6 +124,14 @@ namespace WBNET_Updater
 			for (int i = 0; i < Exclusion_List.Items.Count; i++)
 			{
 				Exclusion_List.SetItemChecked(i, true);
+			}
+		}
+
+		private void Deselect_All_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < Exclusion_List.Items.Count; i++)
+			{
+				Exclusion_List.SetItemChecked(i, false);
 			}
 		}
 	}

@@ -40,14 +40,16 @@ namespace WBNET_Updater
 			this.Cancel = new System.Windows.Forms.Button();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.Select_All = new System.Windows.Forms.Button();
+			this.Deselect_All = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// Exclusion_List
 			// 
+			this.Exclusion_List.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
 			this.Exclusion_List.CheckOnClick = true;
-			this.Exclusion_List.Location = new System.Drawing.Point(23, 68);
+			this.Exclusion_List.Location = new System.Drawing.Point(13, 68);
 			this.Exclusion_List.Name = "Exclusion_List";
-			this.Exclusion_List.Size = new System.Drawing.Size(231, 199);
+			this.Exclusion_List.Size = new System.Drawing.Size(231, 154);
 			this.Exclusion_List.TabIndex = 0;
 			this.toolTip1.SetToolTip(this.Exclusion_List, "Unchecked items will be removed from the list.");
 			// 
@@ -56,18 +58,18 @@ namespace WBNET_Updater
 			this.label1.AutoSize = true;
 			this.label1.Location = new System.Drawing.Point(12, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(256, 13);
+			this.label1.Size = new System.Drawing.Size(244, 13);
 			this.label1.TabIndex = 1;
-			this.label1.Text = "Add new items here, any \" or spaces will be removed";
+			this.label1.Text = "Add new items here, any | symbols will be removed";
 			// 
 			// List_Label
 			// 
 			this.List_Label.AutoSize = true;
 			this.List_Label.Location = new System.Drawing.Point(12, 52);
 			this.List_Label.Name = "List_Label";
-			this.List_Label.Size = new System.Drawing.Size(177, 13);
+			this.List_Label.Size = new System.Drawing.Size(148, 13);
 			this.List_Label.TabIndex = 2;
-			this.List_Label.Text = "Items to be exluded from {list-name}.";
+			this.List_Label.Text = "to be excluded from Backups.";
 			// 
 			// Text_To_Add
 			// 
@@ -89,7 +91,8 @@ namespace WBNET_Updater
 			// 
 			// Accept
 			// 
-			this.Accept.Location = new System.Drawing.Point(193, 301);
+			this.Accept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.Accept.Location = new System.Drawing.Point(174, 283);
 			this.Accept.Name = "Accept";
 			this.Accept.Size = new System.Drawing.Size(75, 23);
 			this.Accept.TabIndex = 5;
@@ -99,7 +102,8 @@ namespace WBNET_Updater
 			// 
 			// Cancel
 			// 
-			this.Cancel.Location = new System.Drawing.Point(112, 301);
+			this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.Cancel.Location = new System.Drawing.Point(93, 283);
 			this.Cancel.Name = "Cancel";
 			this.Cancel.Size = new System.Drawing.Size(75, 23);
 			this.Cancel.TabIndex = 6;
@@ -109,20 +113,35 @@ namespace WBNET_Updater
 			// 
 			// Select_All
 			// 
-			this.Select_All.Location = new System.Drawing.Point(23, 274);
+			this.Select_All.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Select_All.Location = new System.Drawing.Point(15, 231);
 			this.Select_All.Name = "Select_All";
-			this.Select_All.Size = new System.Drawing.Size(70, 22);
+			this.Select_All.Size = new System.Drawing.Size(78, 22);
 			this.Select_All.TabIndex = 7;
 			this.Select_All.Text = "Select All";
 			this.Select_All.UseVisualStyleBackColor = true;
 			this.Select_All.Click += new System.EventHandler(this.Select_All_Click);
 			// 
+			// Deselect_All
+			// 
+			this.Deselect_All.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.Deselect_All.Location = new System.Drawing.Point(99, 231);
+			this.Deselect_All.Name = "Deselect_All";
+			this.Deselect_All.Size = new System.Drawing.Size(90, 22);
+			this.Deselect_All.TabIndex = 8;
+			this.Deselect_All.Text = "De-Select All";
+			this.Deselect_All.UseVisualStyleBackColor = true;
+			this.Deselect_All.Click += new System.EventHandler(this.Deselect_All_Click);
+			// 
 			// Backup_Exclusion_Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(281, 337);
+			this.ClientSize = new System.Drawing.Size(281, 318);
 			this.ControlBox = false;
+			this.Controls.Add(this.Deselect_All);
 			this.Controls.Add(this.Select_All);
 			this.Controls.Add(this.Cancel);
 			this.Controls.Add(this.Accept);
@@ -134,7 +153,9 @@ namespace WBNET_Updater
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.KeyPreview = true;
 			this.MaximizeBox = false;
+			this.MaximumSize = new System.Drawing.Size(297, 601);
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(297, 241);
 			this.Name = "Backup_Exclusion_Editor";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -156,5 +177,6 @@ namespace WBNET_Updater
 		private System.Windows.Forms.Button Accept;
 		private System.Windows.Forms.Button Cancel;
 		private Button Select_All;
+		private Button Deselect_All;
 	}
 }

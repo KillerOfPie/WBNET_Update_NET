@@ -81,14 +81,38 @@ namespace WBNET_Updater
 
 		private void Set_Directories()
 		{
-			ConfigurationManager.AppSettings.Set("WinBill-Net-Install-Dir", Set_Dir_To_Relative(WB_Net_Path.Text));
-			ConfigurationManager.AppSettings.Set("WinBill-Net-Backup-Dir", Set_Dir_To_Relative(Backup_Path.Text));
-			ConfigurationManager.AppSettings.Set("WinBill-Net-Source-Dir", Set_Dir_To_Relative(Source_Path.Text));
+			SetAppSetting("WinBill-Net-Install-Dir", Set_Dir_To_Relative(WB_Net_Path.Text));
+			SetAppSetting("WinBill-Net-Backup-Dir", Set_Dir_To_Relative(Backup_Path.Text));
+			SetAppSetting("WinBill-Net-Source-Dir", Set_Dir_To_Relative(Source_Path.Text));
+			
+		}
+
+		public void SetAppSetting(string key, string value)
+		{
+			try
+			{
+				var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				var settings = configFile.AppSettings.Settings;
+				if (settings[key] == null)
+				{
+					settings.Add(key, value);
+				}
+				else
+				{
+					settings[key].Value = value;
+				}
+				configFile.Save(ConfigurationSaveMode.Modified);
+				ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+			}
+			catch (ConfigurationErrorsException)
+			{
+				//Do Nothing
+			}
 		}
 
 		private string Fix_Dir(string dir)
 		{
-			if (dir.StartsWith("\\"))
+			if (dir.StartsWith("\\") && !dir.StartsWith("\\\\"))
 			{
 				dir = Application.StartupPath + dir;
 			}
@@ -117,7 +141,7 @@ namespace WBNET_Updater
 			Source_Path.Text = /*Set_Dir_To_Relative*/(Open_Browse_Dialog("Select WinBill.Net Update Source Directory", sourcePath));
 		}
 
-		private string Set_Dir_To_Relative(string dir)
+		public string Set_Dir_To_Relative(string dir)
 		{
 			if (dir == Application.StartupPath)
 			{
